@@ -99,7 +99,7 @@ lo documenta. Si el cliente pide renombrarla, es una línea de post-proceso apar
 | # | criterio | resultado | evidencia |
 |---|---|---|---|
 | 1 | filas == realidad del sitio | ✅ 1000/1000 | log real: `RESULT filas=1000 invalidas=0` (50 páginas × 20) |
-| 2 | repetible sin duplicados | ✅ | corrida #1 y #2 → mismo sha256; `sort \| uniq -d` = 0 líneas |
+| 2 | repetible sin duplicados | ✅ | corrida #1 y #2 → mismo sha256; `sort \| uniq -d` = 0 líneas (re-certificado en terminal del operador, 2026-10-22: mismo hash + `dirty-diff` `e3b0c44298fc`) |
 | 3 | tipos correctos en todas las columnas | ✅ | chequeo full-dataset: 0 errores de tipo (float/int en 1000 filas) |
 | 4 | clon limpio + README | ✅ | `git clone` → `verify.sh` (passed, VERIFY OK) → crawl smoke `filas=2` |
 | 5 | tests + verify exit 0 | ✅ | tests offline (fixtures HTML reales, sin red) + `VERIFY OK` en recibo |
