@@ -99,7 +99,7 @@ lo documenta. Si el cliente pide renombrarla, es una línea de post-proceso apar
 | # | criterio | resultado | evidencia |
 |---|---|---|---|
 | 1 | filas == realidad del sitio | ✅ 1000/1000 | log real: `RESULT filas=1000 invalidas=0` (50 páginas × 20) |
-| 2 | repetible sin duplicados | ✅ | corrida #1 y #2 → mismo sha256; `sort \| uniq -d` = 0 líneas (re-certificado en terminal del operador, 2026-10-22: mismo hash + `dirty-diff` `e3b0c44298fc`) |
+| 2 | repetible sin duplicados | ✅ | corrida #1 y #2 → mismo sha256; `sort \| uniq -d` = 0 líneas (re-certificado en terminal del operador, 2026-10-22: mismo hash + `dirty-diff` `e3b0c44298fc`; re-crawl completo con el parser final: **mismo sha256**, `888.1s`) |
 | 3 | tipos correctos en todas las columnas | ✅ | chequeo full-dataset: 0 errores de tipo (float/int en 1000 filas) |
 | 4 | clon limpio + README | ✅ | `git clone` → `verify.sh` (passed, VERIFY OK) → crawl smoke `filas=2` |
 | 5 | tests + verify exit 0 | ✅ | tests offline (fixtures HTML reales, sin red) + `VERIFY OK` en recibo |
@@ -108,6 +108,12 @@ Los CSV de evidencia (run1/run2) salieron de la versión regex del parser; tras 
 refactor a `html.parser` (5d1caf7) un smoke real de 2 libros produjo **filas
 idénticas** a las de run1 (`diff` sobre header + 2 filas). Tests: 17 al momento de
 los runs; 22 tras añadir 404/JSON.
+
+Prueba definitiva de paridad: el re-crawl COMPLETO del catálogo (1000 libros, `888.1s`,
+corrida con el parser final `html.parser`) produjo un CSV **byte-idéntico** al
+certificado (`diff` vacío contra run1; mismo sha256 compartido
+`b00019e42c1dcf4b1d94596ecb783d521be5252784562fdfce2ec375ef2370fc`). El código que se
+entrega es el que produce el artefacto certificado.
 
 (corridas: #1 `776.9s` y #2 `791.8s` con delay por defecto `0.5s`; `diff` entre
 ambos CSV: **IDÉNTICAS**; sha256 compartido `b00019e42c1dcf4b…`.)
