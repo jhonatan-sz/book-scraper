@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import logging
 import time
 
@@ -19,6 +20,14 @@ def write_csv(books: list[Book], path: str) -> None:
         writer.writerow(CSV_COLUMNS)
         for book in books:
             writer.writerow([getattr(book, column) for column in CSV_COLUMNS])
+
+
+def write_json(books: list[Book], path: str) -> None:
+    """Escribe JSON (array de filas con las mismas columnas que el CSV, utf-8)."""
+    rows = [{column: getattr(book, column) for column in CSV_COLUMNS} for book in books]
+    with open(path, "w", encoding="utf-8") as fh:
+        json.dump(rows, fh, ensure_ascii=False, indent=1)
+        fh.write("\n")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -40,6 +49,12 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="tope de cheques de detalle (para pruebas rapidas)",
     )
+    parser.add_argument(
+        "--format",
+        choices=["csv", "json"],
+        default="csv",
+        help="formato de salida (json para el paquete Premium)",
+    )
     return parser
 
 
@@ -53,7 +68,8 @@ def main(argv: list[str] | None = None) -> int:
     books, invalid = scrape_books(
         args.listing_url, fetcher, logger=logger, max_books=args.max_books
     )
-    write_csv(books, args.out)
+    write = write_json if args.format == "json" else write_csv
+    write(books, args.out)
     elapsed = time.monotonic() - start
 
     logger.info(
