@@ -98,4 +98,5 @@ lo documenta. Si el cliente pide renombrarla, es una línea de post-proceso apar
 | 4 | clon limpio + README | ✅ | `git clone` → `verify.sh` (17 passed) + crawl smoke ` filas=2` |
 | 5 | tests + verify exit 0 | ✅ | `17 passed` offline + `VERIFY OK` con recibo `.agent/last-verify.txt` |
 
-(corridas: #1 `776.9s`, #2 consumo igual con cronometraje; delay por defecto `0.5s`.)
+(corridas: #1 `776.9s` y #2 `791.8s` con delay por defecto `0.5s`; `diff` entre
+ambos CSV: **IDÉNTICAS**; sha256 compartido `b00019e42c1dcf4b…`.)
