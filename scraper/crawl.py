@@ -58,7 +58,10 @@ def scrape_books(
     books: list[Book] = []
     invalid: list[tuple[str, str]] = []
 
-    for url in urls:
+    total_details = len(urls)
+    for position, url in enumerate(urls, start=1):
+        if position % 100 == 0 or position == total_details:
+            logger.info("detalle %d/%d (%s)", position, total_details, url.rsplit("/", 2)[-2])
         page = fetcher.get(url)
         try:
             book = parse_detail(page, url)
