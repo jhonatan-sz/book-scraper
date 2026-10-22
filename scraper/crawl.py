@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import urllib.error
 from typing import Protocol
 
 from .fetch import DEFAULT_DELAY  # noqa: F401 (documentación por defecto)
@@ -62,7 +63,14 @@ def scrape_books(
     for position, url in enumerate(urls, start=1):
         if position % 100 == 0 or position == total_details:
             logger.info("detalle %d/%d (%s)", position, total_details, url.rsplit("/", 2)[-2])
-        page = fetcher.get(url)
+        try:
+            page = fetcher.get(url)
+        except urllib.error.HTTPError as exc:
+            if exc.code == 404:  # libro eliminado/mal enlazado: fila invalida y seguimos
+                logger.warning("404 en libro, fila invalida omitida: %s", url)
+                invalid.append((url, "http 404"))
+                continue
+            raise  # 403 y demas 4xx: aborta (protege de bloqueos del sitio)
         try:
             book = parse_detail(page, url)
         except ValueError as exc:

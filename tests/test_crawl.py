@@ -1,7 +1,11 @@
 """Integración offline: crawl completo con fetcher falso (cero red)."""
 
+import logging
+import urllib.error
 from pathlib import Path
 from urllib.parse import urljoin
+
+import pytest
 
 from scraper.crawl import LISTING_URL_DEFAULT, scrape_books
 
@@ -91,3 +95,33 @@ def test_crawl_max_books():
 
 def test_slug_listing_default_es_books_1():
     assert LISTING_URL_DEFAULT.startswith("http://books.toscrape.com/catalogue/category/books_1/")
+
+
+class ErrorFetcher(FakeFetcher):
+    """Fake que lanza HTTPError `code` al pedir `raising_url`."""
+
+    def __init__(self, pages: dict[str, str], raising_url: str, code: int):
+        super().__init__(pages)
+        self.raising_url = raising_url
+        self.code = code
+
+    def get(self, url: str) -> str:
+        if url == self.raising_url:
+            self.calls.append(url)
+            raise urllib.error.HTTPError(url, self.code, "err", None, None)
+        return super().get(url)
+
+
+def test_crawl_404_en_libro_fila_invalida_y_sigue():
+    fake, listing = make_fake()
+    raising = ErrorFetcher(fake.pages, "http://biblio.test/cat/detail-1.html", 404)
+    books, invalid = scrape_books(listing, raising, logger=logging.getLogger())
+    assert len(books) == 1
+    assert invalid == [("http://biblio.test/cat/detail-1.html", "http 404")]
+
+
+def test_crawl_403_aborta_la_corrida():
+    fake, listing = make_fake()
+    raising = ErrorFetcher(fake.pages, "http://biblio.test/cat/detail-1.html", 403)
+    with pytest.raises(urllib.error.HTTPError):
+        scrape_books(listing, raising, logger=logging.getLogger())
