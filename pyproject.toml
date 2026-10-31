@@ -1,7 +1,7 @@
 [project]
 name = "book-scraper"
 version = "0.1.0"
-description = "Scraper stdlib de books.toscrape.com que entrega un CSV limpio (practica de gig)"
+description = "Scraper stdlib de books.toscrape.com que entrega un CSV limpio (proyecto de práctica)"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = []
