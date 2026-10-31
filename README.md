@@ -105,7 +105,7 @@ lo documenta. Si el cliente pide renombrarla, es una línea de post-proceso apar
 | 5 | tests + verify exit 0 | ✅ | tests offline (fixtures HTML reales, sin red) + `VERIFY OK` en recibo |
 
 Los CSV de evidencia (run1/run2) salieron de la versión regex del parser; tras el
-refactor a `html.parser` (5d1caf7) un smoke real de 2 libros produjo **filas
+refactor a `html.parser` (be1cf30) un smoke real de 2 libros produjo **filas
 idénticas** a las de run1 (`diff` sobre header + 2 filas). Tests: 17 al momento de
 los runs; 22 tras añadir 404/JSON.
 
