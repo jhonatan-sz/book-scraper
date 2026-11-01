@@ -1,5 +1,8 @@
 # book-scraper
 
+[![CI](https://github.com/jhonatan-sz/book-scraper/actions/workflows/ci.yml/badge.svg)](https://github.com/jhonatan-sz/book-scraper/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 **Demo project on a practice site** (`books.toscrape.com`): muestra hecha sobre un
 sitio de práctica que permite scraping — no es entrega para un cliente. Recorre
 **todas** las páginas del catálogo (1000 libros en 50 páginas de listado) y entrega un
